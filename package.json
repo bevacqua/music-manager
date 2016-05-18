@@ -1,6 +1,6 @@
 {
   "name": "music-manager",
-  "version": "1.1.2",
+  "version": "1.1.3",
   "description": "Manages a list of favorite artists and opens playlists on youtube.",
   "repository": {
     "type": "git",
