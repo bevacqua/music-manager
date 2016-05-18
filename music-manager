@@ -60,7 +60,7 @@ function help () {
     'commands:',
     '  --add, -a <terms>             adds a term to the list of favorite artists.',
     '  --add-random, --ar <category> adds 10 random artist suggestions from the provided category.',
-    '  --i <amount                   defines how many random artist suggestions are added with `--ar`.',
+    '  --i <amount>                  defines how many random artist suggestions are added with `--ar`.',
     '  --remove, --rm, -r <terms>    removes a term from the list of favorite artists. expects an exact match.',
     '  --clear                       clears your list of favorite artists.',
     '  --list, -l                    lists currently favorite artists.',
