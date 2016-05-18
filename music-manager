@@ -150,7 +150,7 @@ function suggest (query, log, amount) {
     )])
   }
   function result (choices) {
-    var suggestion = sample(choices).text;
+    var suggestion = (sample(choices) || sample(artists.all)).text;
     if (log) {
       console.log(suggestion);
     }
