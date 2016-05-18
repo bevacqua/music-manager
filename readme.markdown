@@ -14,44 +14,25 @@ npm i -g music-manager
 
 you get `mm` as a cli.
 
-# `mm --add "many terms"` or `mm -a term`
-
-adds a term to the list of favorite artists.
-
-# `mm --remove "many terms"` or `mm --rm "many terms"` or `mm -r term`
-
-removes a term from the list of favorite artists. expects an exact match.
-
-# `mm --clear`
-
-clears your list of favorite artists.
-
-# `mm --list` or `mm -l`
-
-lists currently favorite artists.
-
-# `mm --suggest "category terms"` or `mm -s category`
-
-displays a random artist suggestion from the provided category _(e.g: `rock`)_. you can omit the category filter.
+# usage
 
 ```shell
-mm -s "punk rock"
-Angelic Upstarts
+» mm
+usage:
+  mm <command> [argument]
+
+commands:
+  --add, -a <terms>             adds a term to the list of favorite artists.
+  --add-random, --ar <category> adds 10 random artist suggestions from the provided category.
+  --i <amount                   defines how many random artist suggestions are added with `--ar`.
+  --remove, --rm, -r <terms>    removes a term from the list of favorite artists. expects an exact match.
+  --clear                       clears your list of favorite artists.
+  --list, -l                    lists currently favorite artists.
+  --suggest, -s [category]      suggests a random artist. you may provide a desirable category such as "rock".
+  --open, -o                    opens youtube in your default browser at the search results page for a random artist.
+  --best, -b                    flag for `--open`, searches for "best of" tracks.
+  --long                        flag for `--open`, searches for longer tracks.
 ```
-
-# `mm --add-random "category terms" -i 10` or `mm --ar category -i 10` or `mm --ar`
-
-adds `10` random artist suggestions from the provided category _(e.g: `rock`)_. you can omit the category filter. you can change `10` to any number using the `-i` parameter.
-
-# `mm --open` or `mm -o`
-
-opens youtube in your default browser at the search results page for a random artist. there are some flags that can tweak behavior.
-
-| flag                | description                                                     |
-|---------------------|-----------------------------------------------------------------|
-| `--best` or `-b`    | display search results for `best of <artist>`                   |
-| `--long`            | display search results for `<artist> hours`; gets longer videos |
-| `--suggest` or `-s` | display search results for a suggested artist                   |
 
 # license
 
