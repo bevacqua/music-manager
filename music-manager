@@ -102,7 +102,7 @@ function prefix () {
 }
 
 function suffix () {
-  var suffixes = [];
+  var suffixes = ['music'];
   if (argv.long) {
     suffixes.push('hours');
   }
