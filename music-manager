@@ -40,8 +40,9 @@ function select (data) {
         'See `mm --help` for usage advice.'
       ]);
       return;
+    } else {
+      open(sample(data.terms));
     }
-    open(sample(data.terms));
   } else if (argv.suggest) {
     suggest(typeof argv.suggest === 'string' && argv.suggest, true, typeof argv.i === 'number' ? argv.i : 1);
   } else {
