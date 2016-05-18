@@ -1,0 +1,25 @@
+{
+  "name": "music-manager",
+  "version": "1.0.0",
+  "description": "Manages a list of favorite artists and opens playlists on youtube.",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bevacqua/music-manager.git"
+  },
+  "bugs": {
+    "url": "https://github.com/bevacqua/music-manager/issues"
+  },
+  "homepage": "https://github.com/bevacqua/music-manager#readme",
+  "author": "Nicolas Bevacqua <nicolasbevacqua@gmail.com> (https://ponyfoo.com)",
+  "license": "MIT",
+  "bin": {
+    "mm": "music-manager"
+  },
+  "dependencies": {
+    "artists": "1.0.0",
+    "lodash": "4.11.2",
+    "minimist": "1.2.0",
+    "opn": "4.0.1",
+    "queso": "1.0.0"
+  }
+}

@@ -1,0 +1,166 @@
+#!/usr/bin/env node
+
+var fs = require('fs');
+var opn = require('opn');
+var path = require('path');
+var queso = require('queso');
+var sample = require('lodash/sample');
+var argv = require('minimist')(process.argv.slice(2), {
+  alias: {
+    list: ['ls', 'l'],
+    best: 'b',
+    add: 'a',
+    addRandom: 'ar',
+    remove: ['rm', 'r'],
+    open: 'o',
+    suggest: 's'
+  },
+  types: {
+    i: 'number'
+  }
+});
+var dataFile = path.join(__dirname, 'data.json');
+
+select(load());
+
+function select (data) {
+  if (argv.add) {
+    add(data, argv.add);
+  } else if (argv.remove) {
+    remove(data, argv.remove);
+  } else if (argv.addRandom) {
+    addRandom(data, typeof argv.addRandom === 'string' && argv.addRandom, typeof argv.i === 'number' ? argv.i : 10);
+  } else if (argv.clear) {
+    init();
+  } else if (argv.list) {
+    list(data);
+  } else if (argv.open) {
+    if (argv.suggest) {
+      open(suggest(typeof argv.suggest === 'string' && argv.suggest));
+    } else if (data.terms.length === 0) {
+      print([
+        'You must add at least one artist using `mm -a "<artist>"`.',
+        'See `mm --help` for usage advice.'
+      ]);
+      return;
+    }
+    open(sample(data.terms));
+  } else if (argv.suggest) {
+    suggest(typeof argv.suggest === 'string' && argv.suggest, true);
+  } else {
+    help();
+  }
+}
+
+function help () {
+  print([
+    'usage:',
+    '  mm <command> [argument]',
+    '',
+    'commands:',
+    '  --add, -a <terms>             adds a term to the list of favorite artists.',
+    '  --add-random, --ar <category> adds 10 random artist suggestions from the provided category.',
+    '  --i <amount                   defines how many random artist suggestions are added with `--ar`.',
+    '  --remove, --rm, -r <terms>    removes a term from the list of favorite artists. expects an exact match.',
+    '  --clear                       clears your list of favorite artists.',
+    '  --list, -l                    lists currently favorite artists.',
+    '  --suggest, -s [category]      suggests a random artist. you may provide a desirable category such as "rock".',
+    '  --open, -o                    opens youtube in your default browser at the search results page for a random artist.',
+    '  --best, -b                    flag for `--open`, searches for "best of" tracks.',
+    '  --long                        flag for `--open`, searches for longer tracks.'
+  ]);
+}
+
+function print (lines) {
+  console.log(lines.join('\n'));
+}
+
+function load () {
+  try {
+    return require(dataFile);
+  } catch (e) {
+    return init();
+  }
+}
+
+function init () {
+  var data = { terms: [] };
+  persist(data);
+  return data;
+}
+
+function open (term) {
+  return opn('https://www.youtube.com/results' + queso.stringify({
+    search_query: (prefix() + term + suffix()).trim()
+  }), { wait: false });
+}
+
+function prefix () {
+  var prefixes = [];
+  if (argv.best) {
+    prefixes.push('best of');
+  }
+  return prefixes.join(' ') + ' ';
+}
+
+function suffix () {
+  var suffixes = [];
+  if (argv.long) {
+    suffixes.push('hours');
+  }
+  return ' ' + suffixes.join(' ');
+}
+
+function add (data, term, persistent) {
+  if (data.terms.indexOf(term) === -1) {
+    data.terms.push(term);
+    data.terms.sort();
+    if (persistent !== false) {
+      persist(data);
+    }
+  }
+}
+
+function addRandom (data, query, i) {
+  for (;i;i--) {
+    add(data, suggest(query), false);
+  }
+  persist(data);
+}
+
+function remove (data, term) {
+  var i = data.terms.indexOf(term);
+  if (i !== -1) {
+    data.terms.splice(i, 1);
+    persist(data);
+  }
+}
+
+function suggest (query, log) {
+  var artists = require('artists');
+  if (!query) {
+    return result(artists.all);
+  }
+  return result(artists.categorized[sample(Object
+    .keys(artists.categorized)
+    .filter(byQuery)
+  )]);
+  function result (choices) {
+    var suggestion = sample(choices).text;
+    if (log) {
+      console.log(suggestion);
+    }
+    return suggestion;
+  }
+  function byQuery (category) {
+    return category.toLowerCase().indexOf(query.toLowerCase()) !== -1;
+  }
+}
+
+function list (data) {
+  console.log(data.terms.sort().join('\n'));
+}
+
+function persist (data) {
+  fs.writeFileSync(dataFile, JSON.stringify(data, null, 2) + '\n');
+}
