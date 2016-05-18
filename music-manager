@@ -14,9 +14,6 @@ var argv = require('minimist')(process.argv.slice(2), {
     remove: ['rm', 'r'],
     open: 'o',
     suggest: 's'
-  },
-  types: {
-    i: 'number'
   }
 });
 var dataFile = path.join(__dirname, 'data.json');
@@ -46,7 +43,7 @@ function select (data) {
     }
     open(sample(data.terms));
   } else if (argv.suggest) {
-    suggest(typeof argv.suggest === 'string' && argv.suggest, true);
+    suggest(typeof argv.suggest === 'string' && argv.suggest, true, typeof argv.i === 'number' ? argv.i : 1);
   } else {
     help();
   }
@@ -136,15 +133,21 @@ function remove (data, term) {
   }
 }
 
-function suggest (query, log) {
+function suggest (query, log, amount) {
   var artists = require('artists');
-  if (!query) {
-    return result(artists.all);
+  if (log) {
+    while (amount --> 1) { more(); }
   }
-  return result(artists.categorized[sample(Object
-    .keys(artists.categorized)
-    .filter(byQuery)
-  )]);
+  return more();
+  function more () {
+    if (!query) {
+      return result(artists.all);
+    }
+    return result(artists.categorized[sample(Object
+      .keys(artists.categorized)
+      .filter(byQuery)
+    )])
+  }
   function result (choices) {
     var suggestion = sample(choices).text;
     if (log) {
